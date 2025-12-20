@@ -1,6 +1,6 @@
 # Interconexión de Ventanas
 
-Este proyecto simple tiene **dos páginas HTML** (`window1.html` y `window2.html`) las cuales se comunican entre sí para sincronizar la posición de un círculo y una línea entre dos ventanas del navegador. Es un proyecto simple para aprender tanto HTML como el uso de APIs como el [**`BroadcastChannel`**](https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API).
+Este proyecto simple tiene **dos páginas HTML** (`window1.html` y `window2.html`) las cuales se comunican entre sí para sincronizar la posición de un círculo y una línea entre dos ventanas del navegador. Es un proyecto simple para practicar tanto HTML como el uso de APIs como el [**`BroadcastChannel`**](https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API).
 ---
 
 ## ¿Cómo funciona?
