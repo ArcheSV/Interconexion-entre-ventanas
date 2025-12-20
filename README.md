@@ -34,4 +34,4 @@ ningun servidor.
 
 ## Licencia
 
-Este ejemplo está bajo la licencia **MIT**. Siéntete libre de usarlo, modificarlo y compartirlo.
+Este ejemplo está bajo la licencia **MIT**.
