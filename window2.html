@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventana 2</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const channel = new BroadcastChannel('window_sync');
+
+        let otherWindowPos = null;
+        let targetOtherWindowPos = null;
+        let myWindowId = 'window2';
+        let lastBroadcast = 0;
+        const BROADCAST_INTERVAL = 16;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function getCirclePosition() {
+            return {
+                x: window.screenX + window.innerWidth / 2,
+                y: window.screenY + window.innerHeight / 2
+            };
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 30;
+
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            if (targetOtherWindowPos) {
+                otherWindowPos = { ...targetOtherWindowPos };
+            }
+
+            if (otherWindowPos) {
+                const otherX = otherWindowPos.x - window.screenX;
+                const otherY = otherWindowPos.y - window.screenY;
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(otherX, otherY);
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+
+        function broadcastPosition() {
+            const pos = getCirclePosition();
+            channel.postMessage({
+                id: myWindowId,
+                x: pos.x,
+                y: pos.y
+            });
+        }
+
+        channel.onmessage = (event) => {
+            if (event.data.id !== myWindowId) {
+                targetOtherWindowPos = {
+                    x: event.data.x,
+                    y: event.data.y
+                };
+            }
+        };
+
+        function animate(timestamp) {
+            if (timestamp - lastBroadcast >= BROADCAST_INTERVAL) {
+                broadcastPosition();
+                lastBroadcast = timestamp;
+            }
+
+            draw();
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        window.addEventListener('load', () => {
+            resizeCanvas();
+            requestAnimationFrame(animate);
+        });
+    </script>
+</body>
+
+</html>
