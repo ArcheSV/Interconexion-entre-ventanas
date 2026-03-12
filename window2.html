@@ -19,22 +19,63 @@
             top: 0;
             left: 0;
         }
+
+        #connection-msg {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: sans-serif;
+            font-size: 16px;
+            color: #999;
+            text-align: center;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #connection-msg.hidden {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
     <canvas id="canvas"></canvas>
 
+    <div id="connection-msg">Open window1.html to connect</div>
+
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const channel = new BroadcastChannel('window_sync');
+        const msg = document.getElementById('connection-msg');
 
         let otherWindowPos = null;
         let targetOtherWindowPos = null;
         let myWindowId = 'window2';
         let lastBroadcast = 0;
         const BROADCAST_INTERVAL = 16;
+
+        let isConnected = false;
+        let lastMessageTime = 0;
+        const CONNECTION_TIMEOUT = 3000;
+
+        function checkConnection() {
+            const now = Date.now();
+            if (lastMessageTime > 0 && (now - lastMessageTime) > CONNECTION_TIMEOUT) {
+                if (isConnected) {
+                    isConnected = false;
+                    otherWindowPos = null;
+                    targetOtherWindowPos = null;
+                    msg.classList.remove('hidden');
+                }
+            }
+            if (!isConnected && lastMessageTime === 0) {
+                msg.classList.remove('hidden');
+            }
+        }
+
+        setInterval(checkConnection, 1000);
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
@@ -94,6 +135,12 @@
                     x: event.data.x,
                     y: event.data.y
                 };
+
+                lastMessageTime = Date.now();
+                if (!isConnected) {
+                    isConnected = true;
+                    msg.classList.add('hidden');
+                }
             }
         };
 
