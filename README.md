@@ -1,37 +1,36 @@
-# Interconexión de Ventanas
+# Window Interconnection
 
-Este proyecto simple tiene **dos páginas HTML** (`window1.html` y `window2.html`) las cuales se comunican entre sí para sincronizar la posición de un círculo y una línea entre dos ventanas del navegador. Es un proyecto simple para practicar tanto HTML como el uso de APIs como el [**`BroadcastChannel`**](https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API).
+This simple project consists of **two HTML pages** (window1.html and window2.html) that communicate with each other to synchronize the position of a circle and a line between two browser windows. It is a simple project to practice both HTML and the use of APIs such as [**`BroadcastChannel`**](https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API).
 ---
 
-## ¿Cómo funciona?
+## How does it work?
 
-1. **Canvas y círculo**
-   - Cada página crea un `<canvas>` que ocupa todo el viewport.
-   - En el centro del canvas se dibuja un círculo blanco con borde negro (radio 30px).
+1. **Canvas and circle**
+   - Each page creates a `<canvas>` that occupies the entire viewport.
+   - A white circle with a black border (30px radius) is drawn in the center of the canvas.
 2. **BroadcastChannel**
-   - Ambas ventanas comparten el mismo canal llamado `"window_sync"` mediante la API [**`BroadcastChannel`**](https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API).
-   - Cada ventana envía su posición (coordenadas X/Y del centro del círculo) cada ~16 ms. Para calcular los milisegundos necesarios según los fotogramas que queramos, se divide 1000 entre esa cantidad (p. ej: 1000 / 60 = 16.6ms).
-3. **Sincronización**
-   - Cuando una ventana recibe el mensaje del otro, actualiza la posición objetivo (`targetOtherWindowPos`).
-   - En el siguiente frame se dibuja una línea negra que conecta el círculo propio con el círculo de la otra ventana.
-4. **Redimensionado**
-   - Al cambiar el tamaño de la ventana se ajusta el canvas y se sigue enviando la posición actual.
+   - Both windows share the same channel named `"window_sync"` using the [**`BroadcastChannel`**](https://developer.mozilla.org/en-US/docs/Web/API/Broadcast_Channel_API) API.
+   - Each window sends its position (X/Y coordinates of the circle's center) every ~16 ms. To calculate the necessary milliseconds based on the desired frame rate, divide 1000 by that amount (e.g., 1000 / 60 = 16.6ms).
+3. **Synchronization**
+   - When one window receives a message from the other, it updates the target position (`targetOtherWindowPos`).
+   - In the next frame, a black line is drawn connecting its own circle with the circle in the other window.
+4. **Resizing**
+   - When the window size changes, the canvas adjusts, and the current position continues to be sent.
 
 ---
 
-## Cómo usarlo
+## How to use it
 
-Es tan simple como abrir los archivos `window1.html` y `window2.html` en dos pestañas o ventanas distintas del navegador (Chrome, Edge, Firefox, etc.), no se necesita
-ningun servidor.
+It's as simple as opening the window1.html and window2.html files in two different browser tabs or windows (Chrome, Edge, Firefox, etc.); no server is needed.
 
 ---
 
-## Como personalizar y cambiar los valores
+## How to customize and change values
 
-- **Cambiar colores**: modifica los valores `fillStyle` y `strokeStyle` en el bloque de dibujo del canvas.
-- **Ajustar radio**: cambia la constante `radius` en la función `draw()`.
-- **Frecuencia de broadcast**: la constante `BROADCAST_INTERVAL` es la que controla cuán a menudo se envían las coordenadas.
+- **Change colors**: modify the `fillStyle` and `strokeStyle` values in the canvas drawing block.
+- **Adjust radius**: change the `radius` constant in the draw() function.
+- **Broadcast frequency**: the `BROADCAST_INTERVAL` constant controls how often coordinates are sent.
 
-## Licencia
+## License
 
-Este ejemplo está bajo la licencia **MIT**.
+This example is under the **MIT** license.
